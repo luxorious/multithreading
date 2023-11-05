@@ -16,3 +16,5 @@ _
 /src/main/java/org/example/harbor/UserInput.java,c\c\cc6c5256a04e637695d034e352045aa9f2c99d19
 c
 3src/main/java/org/example/harbor/UserInterface.java,3\0\3094c778f32d739f1b29d194e13f52cf986442ff
+Y
+)src/main/java/org/example/harbor/task.txt,b\6\b63d1474ddc3c611c79b45e55f6bacd5b286cfda
