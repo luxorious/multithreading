@@ -1,7 +1,5 @@
 package org.example.arraycounting;
 
-import java.lang.management.ManagementFactory;
-import java.lang.management.ThreadMXBean;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -9,7 +7,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class Main {
 
     public static void main(String[] args) throws InterruptedException {
-        Main m = new Main();
+        Main main = new Main();
 
         int[] arr = new int[1_000_000_000];
 
@@ -19,29 +17,27 @@ public class Main {
 
         System.out.println("------------------------");
         long totalSumOneTread = 0;
-        long start = System.currentTimeMillis();
+        long startOneThreadCountingTime = System.currentTimeMillis();
         for (int element : arr) {
             totalSumOneTread += element;
         }
 
-        System.out.println("Time 1 thread = " + (System.currentTimeMillis() - start));
+        System.out.println("Time 1 thread = " + (System.currentTimeMillis() - startOneThreadCountingTime));
         System.out.println(totalSumOneTread + " sum total");
         System.out.println("------------------------");
 
-        ThreadMXBean threads = ManagementFactory.getThreadMXBean();
-
         //leave 1 thread free
-        int availableThreads = threads.getDaemonThreadCount() - 1;
+        int availableThreads = Runtime.getRuntime().availableProcessors() - 1;
 
-        if (isAvailableThreads(availableThreads)){
+        if (isAvailableThreads(availableThreads)) {
             System.out.println("quantity of available threads - " + availableThreads);
 
-            long multi = System.currentTimeMillis();
-            List<Long> countingElements = m.threadsStart(availableThreads, arr);
-            System.out.println("Time multi threads = " + (System.currentTimeMillis() - multi));
+            long startMultithreadingCountingTime = System.currentTimeMillis();
+            List<Long> countingElements = main.threadsStart(availableThreads, arr);
+            System.out.println("Time multi threads = " + (System.currentTimeMillis() - startMultithreadingCountingTime));
 
-            long sum = m.countElements(countingElements);
-            System.out.println(sum + " sum all elements from array");
+            long totalSumMultiTread = main.countElements(countingElements);
+            System.out.println(totalSumMultiTread + " sum all elements from array");
         } else {
             System.out.println("no free threads, further operation of the program is impossible");
         }
@@ -54,9 +50,8 @@ public class Main {
     public List<Long> threadsStart(int threadsNumber, int[] arrayForCalculation) throws InterruptedException {
         List<Thread> threads = new ArrayList<>();
         //розбиваємо масив на кількість частин, яка дорівнює кількості доступних потоків
-        int arrayPartsForCounting = (arrayForCalculation.length / threadsNumber)+ 1;
+        int arrayPartsForCounting = (arrayForCalculation.length / threadsNumber) + 1;
         CopyOnWriteArrayList<Long> elements = new CopyOnWriteArrayList<>();
-
         for (int i = 0; i < threadsNumber; i++) {
             elements.add(0L);
             int currentThread = i;
